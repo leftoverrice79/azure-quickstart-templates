@@ -1,5 +1,24 @@
+variables:
+  poolName: 'Default'
+  resourceGroupName: 'biceprg' # Needs to already exist
+  location: 'westeurope'
+  templateFile: './main.bicep'
+  sourceFolder: 'quickstarts/microsoft.web/webapp-linux-managed-mysql/'
+
 trigger:
 - none
 
 pool:
-  vmImage: $(vmImageName)
+ name: $(poolName)
+
+name: Bicep deploy template - Linux Web App
+
+steps:
+- task: AzureCLI@2
+  inputs:
+    azureSubscription: 'leftoverrice'
+    scriptType: 'bash'
+    scriptLocation: 'inlineScript'
+    inlineScript: |
+      az deployment group create --resource-group $(resourceGroupName) --template-file $(sourceFolder)$(templateFile) \
+      --parameters administratorLogin=$(administratorLogin) administratorLoginPassword=$(administratorLoginPassword)
