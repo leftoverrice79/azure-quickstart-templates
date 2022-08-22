@@ -1,35 +1,5 @@
-# https://docs.microsoft.com/en-us/azure/devops/pipelines/apps/cd/azure/deploy-arm-template?view=azure-devops&tabs=json
-# Starter pipeline
-# Start with a minimal pipeline that you can customize to build and deploy your code.
-# Add steps that build, run tests, deploy, and more:
-# https://aka.ms/yaml
-
-variables:
-   ARM_PASS: $(adminPass)
-
 trigger:
 - none
 
 pool:
-  vmImage: 'ubuntu-latest'
-
-steps:
-- task: CopyFiles@2
-  inputs:
-    SourceFolder: 'quickstarts/microsoft.web/webapp-linux-managed-mysql/'
-    Contents: '**'
-    TargetFolder: '$(Build.ArtifactStagingDirectory)'
-
-- task: AzureResourceManagerTemplateDeployment@3
-  inputs:
-    deploymentScope: 'Resource Group'
-    azureResourceManagerConnection: 'leftoverrice'
-    subscriptionId: 'fc53a24a-07e7-48bc-8a29-dc1a3b1ceb4e'
-    action: 'Create Or Update Resource Group'
-    resourceGroupName: 'ARMPipelinesLAMP-rg'
-    location: 'East US 2'
-    templateLocation: 'Linked artifact'
-    csmFile: '$(Build.ArtifactStagingDirectory)/azuredeploy.json'
-    csmParametersFile: '$(Build.ArtifactStagingDirectory)/azuredeploy.parameters.json'
-    overrideParameters: '-siteName $(siteName) -administratorLogin $(adminUser) -administratorLoginPassword $(ARM_PASS)'
-    deploymentMode: 'Incremental'
+  vmImage: $(vmImageName)
